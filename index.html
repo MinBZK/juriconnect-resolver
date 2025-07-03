@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jurineconnect Resolver</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "RO Sans", "Helvetica Neue", Arial, sans-serif;
+            background: #f3f3f3;
+            color: #154273;
+            line-height: 1.5;
+        }
+
+        .header {
+            background: white;
+            color: #154273;
+            padding: 20px 0;
+            border-bottom: 1px solid #e0e0e0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .gov-logo {
+            font-weight: 600;
+            font-size: 24px;
+            color: #154273;
+            text-decoration: none;
+        }
+
+        .breadcrumb {
+            display: none;
+        }
+
+        .breadcrumb-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .breadcrumb a {
+            color: #01689b;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .page-header {
+            margin-bottom: 40px;
+        }
+
+        .page-title {
+            color: #154273;
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .page-subtitle {
+            color: #666;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .page-description {
+            color: #333;
+            font-size: 16px;
+            max-width: 800px;
+        }
+
+        .resolver-section {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+
+        .section-title {
+            color: #1f4f84;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .input-group {
+            margin-bottom: 24px;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 2px;
+            font-size: 15px;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #1f4f84;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: none;
+            font-family: inherit;
+            min-width: 120px;
+        }
+
+        .btn-primary {
+            background: #1f4f84;
+            color: white;
+            border: 1px solid #1f4f84;
+        }
+
+        .btn-primary:hover {
+            background: #174070;
+            border-color: #174070;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #333;
+            border: 1px solid #ccc;
+        }
+
+        .btn-secondary:hover {
+            background: #f8f9fa;
+        }
+
+        .result {
+            margin-top: 24px;
+            padding: 16px;
+            border-radius: 2px;
+            border: 1px solid #e0e0e0;
+            background: white;
+        }
+
+        .result.success {
+            background: #f0f8f0;
+            border-color: #28a745;
+        }
+
+        .result.error {
+            background: #fdf2f2;
+            border-color: #dc3545;
+        }
+
+        .result h3 {
+            color: #333;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .result-url {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 4px;
+            margin: 12px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            word-break: break-all;
+            border: 1px solid #e0e0e0;
+        }
+
+        .result-actions {
+            margin-top: 16px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 8px 16px;
+            background: #1f4f84;
+            color: white;
+            text-decoration: none;
+            border-radius: 2px;
+            font-size: 14px;
+            font-weight: normal;
+            transition: background 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .action-btn:hover {
+            background: #174070;
+        }
+
+        .examples-section {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        .example-category {
+            margin-bottom: 32px;
+        }
+
+        .category-title {
+            color: #154273;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .example-item {
+            margin-bottom: 16px;
+        }
+
+        .example-link {
+            display: inline-block;
+            padding: 6px 10px;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 2px;
+            color: #1f4f84;
+            text-decoration: none;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+
+        .example-link:hover {
+            background: #1f4f84;
+            color: white;
+            border-color: #1f4f84;
+        }
+
+        .example-description {
+            display: block;
+            margin-top: 6px;
+            color: #666;
+            font-size: 14px;
+            margin-left: 12px;
+        }
+
+        .info-section {
+            background: #e8f4fd;
+            border: 1px solid #bee5eb;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 32px;
+        }
+
+        .info-title {
+            color: #154273;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .info-content {
+            color: #333;
+            font-size: 15px;
+        }
+
+        .redirect-info {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        .test-links {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .test-link {
+            padding: 10px 16px;
+            background: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        .test-link:hover {
+            background: #218838;
+        }
+
+        .footer {
+            display: none;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: #bee5eb;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 20px 16px;
+            }
+
+            .resolver-section,
+            .examples-section,
+            .redirect-info {
+                padding: 20px;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .test-links {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            Jurineconnect Link Resolver
+        </div>
+    </header>
+
+    <nav class="breadcrumb">
+        <div class="breadcrumb-content">
+            <a href="https://www.rijksoverheid.nl">Home</a> >
+            <a href="#">Wetten en regelgeving</a> >
+            <span>Jurineconnect Resolver</span>
+        </div>
+    </nav>
+
+    <main class="main-container">
+        <div class="page-header">
+            <h1 class="page-title">Jurineconnect Link Resolver</h1>
+            <p class="page-subtitle">Converteer jurineconnect-verwijzingen naar toegankelijke URL's</p>
+            <p class="page-description">
+                Deze tool converteert gestandaardiseerde jurineconnect-verwijzingen naar directe links naar
+                Nederlandse wetten, regelgeving en jurisprudentie op officiële overheidswebsites.
+            </p>
+        </div>
+
+        <section class="resolver-section">
+            <h2 class="section-title">Resolver</h2>
+
+            <div class="input-group">
+                <label for="jciInput" class="input-label">Jurineconnect-verwijzing:</label>
+                <input
+                    type="text"
+                    id="jciInput"
+                    class="input-field"
+                    placeholder="bijv. jci1.3:c:BWBR0005290&artikel=668a&lid=1"
+                    autocomplete="off"
+                >
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="resolveLink()">🔍 Verwijzing Oplossen</button>
+                <button class="btn btn-secondary" onclick="clearAll()">🗑️ Wissen</button>
+            </div>
+
+            <div id="result"></div>
+        </section>
+
+        <section class="info-section">
+            <h3 class="info-title">💡 Over Jurineconnect</h3>
+            <div class="info-content">
+                <p>Jurineconnect is het Nederlandse standaardsysteem voor het maken van duurzame verwijzingen naar
+                juridische documenten. Het maakt ondubbelzinnige verwijzingen mogelijk naar specifieke artikelen,
+                leden en onderdelen van wetten, regelgeving en jurisprudentie.</p>
+            </div>
+        </section>
+
+        <section class="examples-section">
+            <h2 class="section-title">Voorbeelden</h2>
+
+            <div class="example-category">
+                <h3 class="category-title">📚 Wetten en Regelgeving</h3>
+
+                <div class="example-item">
+                    <a href="#" class="example-link" onclick="useExample('jci1.3:c:BWBR0005290')">
+                        jci1.3:c:BWBR0005290
+                    </a>
+                    <span class="example-description">Burgerlijk Wetboek Boek 7 (Contractenrecht) - Volledige wet</span>
+                </div>
+
+                <div class="example-item">
+                    <a href="#" class="example-link" onclick="useExample('jci1.3:c:BWBR0005291')">
+                        jci1.3:c:BWBR0005291
+                    </a>
+                    <span class="example-description">Burgerlijk Wetboek Boek 3 (Vermogensrecht) - Volledige wet</span>
+                </div>
+
+                <div class="example-item">
+                    <a href="#" class="example-link" onclick="useExample('jci1.3:c:BWBR0005537')">
+                        jci1.3:c:BWBR0005537
+                    </a>
+                    <span class="example-description">Algemene wet bestuursrecht - Volledige wet</span>
+                </div>
+            </div>
+
+            <div class="example-category">
+                <h3 class="category-title">🎯 Specifieke Artikelverwijzingen</h3>
+
+                <div class="example-item">
+                    <a href="#" class="example-link" onclick="useExample('jci1.3:c:BWBR0005290&artikel=668a&lid=1')">
+                        jci1.3:c:BWBR0005290&artikel=668a&lid=1
+                    </a>
+                    <span class="example-description">Arbeidsrecht - Artikel 668a, lid 1 (Arbeidsovereenkomsten voor bepaalde tijd)</span>
+                </div>
+
+                <div class="example-item">
+                    <a href="#" class="example-link" onclick="useExample('jci1.3:c:BWBR0005537&hoofdstuk=3&artikel=3:4&lid=2')">
+                        jci1.3:c:BWBR0005537&hoofdstuk=3&artikel=3:4&lid=2
+                    </a>
+                    <span class="example-description">Bestuursrecht - Hoofdstuk 3, Artikel 3:4, lid 2 (Zorgvuldigheidsbeginsel)</span>
+                </div>
+
+                <div class="example-item">
+                    <a href="#" class="example-link" onclick="useExample('jci1.3:c:BWBR0005291&boek=3&titel=1&afdeling=2&artikel=24&lid=1')">
+                        jci1.3:c:BWBR0005291&boek=3&titel=1&afdeling=2&artikel=24&lid=1
+                    </a>
+                    <span class="example-description">Vermogensrecht - Boek 3, Titel 1, Afdeling 2, Artikel 24, lid 1 (Handelingsbekwaamheid)</span>
+                </div>
+            </div>
+
+            <div class="example-category">
+                <h3 class="category-title">⚖️ Jurisprudentie</h3>
+
+                <div class="example-item">
+                    <a href="#" class="example-link" onclick="useExample('jci1.3:r:ECLI:NL:HR:2023:658')">
+                        jci1.3:r:ECLI:NL:HR:2023:658
+                    </a>
+                    <span class="example-description">Hoge Raad 2023 - Gegevensbescherming en openbaarheid rechtspraak</span>
+                </div>
+
+                <div class="example-item">
+                    <a href="#" class="example-link" onclick="useExample('jci1.3:r:ECLI:NL:HR:2023:330')">
+                        jci1.3:r:ECLI:NL:HR:2023:330
+                    </a>
+                    <span class="example-description">Hoge Raad 2023 - Belastingrecht (Zakelijke motivatietoets)</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="redirect-info">
+            <h2 class="section-title">🔗 Redirect-functionaliteit</h2>
+            <p>Deze resolver kan ook gebruikt worden als proxy-service. Voeg de jurineconnect-verwijzing toe als URL-parameter:</p>
+
+            <div class="result-url">https://uwdomein.github.io/?jci=jci1.3:c:BWBR0005290&artikel=668a&lid=1</div>
+
+            <p><strong>Parameters:</strong></p>
+            <ul style="margin: 12px 0 16px 20px;">
+                <li><code>jci</code> - De jurineconnect-verwijzing om op te lossen</li>
+                <li><code>redirect=false</code> - (Optioneel) Toon resultaat zonder automatische doorverwijzing</li>
+            </ul>
+
+            <div class="test-links">
+                <a href="?jci=jci1.3:c:BWBR0005290&redirect=false" class="test-link">
+                    🔗 Test Wetverwijzing
+                </a>
+                <a href="?jci=jci1.3:r:ECLI:NL:HR:2023:658&redirect=false" class="test-link">
+                    ⚖️ Test Jurisprudentie
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 Rijksoverheid | <a href="https://www.rijksoverheid.nl">Rijksoverheid.nl</a> |
+            <a href="#">Privacy</a> | <a href="#">Toegankelijkheid</a> | <a href="#">Contact</a></p>
+        </div>
+    </footer>
+
+    <script>
+        function resolveLink() {
+            const input = document.getElementById('jciInput').value.trim();
+            const resultDiv = document.getElementById('result');
+
+            if (!input) {
+                showError('Voer een jurineconnect-verwijzing in');
+                return;
+            }
+
+            try {
+                const resolvedUrl = resolveJurineconnect(input);
+                showSuccess(resolvedUrl, input);
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        function resolveJurineconnect(jciLink) {
+            // Parse the JCI link
+            const pattern = /^jci[\d.]+:([a-z]):([^&]+)(?:&(.+))?$/;
+            const match = jciLink.match(pattern);
+
+            if (!match) {
+                throw new Error('Ongeldige jurineconnect-indeling. Verwacht formaat: jci1.3:c:BWBR0005290&artikel=2');
+            }
+
+            const sourceType = match[1];
+            const documentId = match[2];
+            const paramsStr = match[3] || "";
+
+            // Parse parameters
+            const params = {};
+            if (paramsStr) {
+                paramsStr.split('&').forEach(param => {
+                    const [key, value] = param.split('=');
+                    if (key && value) {
+                        params[key] = value;
+                    }
+                });
+            }
+
+            // Get current date for law references
+            const today = new Date().toISOString().split('T')[0];
+
+            // Resolve based on source type
+            if (sourceType === 'c') {
+                // Laws and regulations
+                return constructLawUrl(documentId, params, today);
+            } else if (sourceType === 'r') {
+                // Court decisions
+                return constructCourtUrl(documentId);
+            } else {
+                throw new Error(`Onbekend brontype: ${sourceType}. Ondersteunde types: c (wetten), r (jurisprudentie)`);
+            }
+        }
+
+        function constructLawUrl(bwbNumber, params, date) {
+            const baseUrl = `https://wetten.overheid.nl/${bwbNumber}/${date}`;
+
+            if (Object.keys(params).length === 0) {
+                return baseUrl;
+            }
+
+            // Build detailed path structure for fine-grained references
+            // Dutch legal sites use path-based navigation like:
+            // /BWBR0005290/2024-07-03/0/Boek7/Titeldeel10/Afdeling9/Artikel668a
+
+            let pathSegments = ['0']; // Version number
+
+            // Add hierarchical segments based on parameters
+            if (params.boek) {
+                pathSegments.push(`Boek${params.boek}`);
+            }
+
+            if (params.titel || params.titeldeel) {
+                const titleNum = params.titel || params.titeldeel;
+                pathSegments.push(`Titel${titleNum}`);
+            }
+
+            if (params.hoofdstuk) {
+                pathSegments.push(`Hoofdstuk${params.hoofdstuk}`);
+            }
+
+            if (params.afdeling) {
+                pathSegments.push(`Afdeling${params.afdeling}`);
+            }
+
+            if (params.paragraaf) {
+                pathSegments.push(`Paragraaf${params.paragraaf}`);
+            }
+
+            if (params.artikel) {
+                pathSegments.push(`Artikel${params.artikel}`);
+            }
+
+            // Construct detailed URL with path structure
+            const pathUrl = `${baseUrl}/${pathSegments.join('/')}`;
+
+            // Add fragment for paragraph/subsection if specified
+            if (params.lid || params.onderdeel || params.sub) {
+                const fragments = [];
+
+                if (params.lid) fragments.push(`lid${params.lid}`);
+                if (params.onderdeel) fragments.push(`onderdeel${params.onderdeel}`);
+                if (params.sub) fragments.push(`sub${params.sub}`);
+
+                return `${pathUrl}#${fragments.join('_')}`;
+            }
+
+            return pathUrl;
+        }
+
+        function constructCourtUrl(ecliOrId) {
+            return `https://uitspraken.rechtspraak.nl/inziendocument?id=${ecliOrId}`;
+        }
+
+        function showSuccess(url, originalLink) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <div class="result success">
+                    <h3>✅ Verwijzing succesvol opgelost!</h3>
+                    <p><strong>Origineel:</strong> ${originalLink}</p>
+                    <div class="result-url">${url}</div>
+                    <div class="result-actions">
+                        <a href="${url}" target="_blank" class="action-btn">🔗 Open Link</a>
+                        <button class="action-btn" onclick="copyToClipboard('${url}')">📋 Kopieer URL</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showError(message) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <div class="result error">
+                    <h3>❌ Oplossen mislukt</h3>
+                    <p>${message}</p>
+                    <p><strong>Ondersteunde formaten:</strong></p>
+                    <ul style="margin: 10px 0; padding-left: 20px;">
+                        <li>Wetten: jci1.3:c:BWBR0005290&artikel=668a&lid=1</li>
+                        <li>Jurisprudentie: jci1.3:r:ECLI:NL:HR:2023:658</li>
+                    </ul>
+                </div>
+            `;
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = '✓ Gekopieerd!';
+                button.style.background = '#28a745';
+
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '#01689b';
+                }, 2000);
+            }).catch(() => {
+                alert('Kopiëren naar klembord mislukt');
+            });
+        }
+
+        function clearAll() {
+            document.getElementById('jciInput').value = '';
+            document.getElementById('result').innerHTML = '';
+            document.getElementById('jciInput').focus();
+        }
+
+        function useExample(example) {
+            document.getElementById('jciInput').value = example;
+            resolveLink();
+        }
+
+        // Auto-redirect functionality
+        function checkForAutoRedirect() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const jciParam = urlParams.get('jci');
+            const redirectParam = urlParams.get('redirect');
+
+            if (jciParam) {
+                document.getElementById('jciInput').value = jciParam;
+
+                try {
+                    const resolvedUrl = resolveJurineconnect(jciParam);
+
+                    if (redirectParam !== 'false') {
+                        showRedirectMessage(resolvedUrl, jciParam);
+                        setTimeout(() => {
+                            window.location.href = resolvedUrl;
+                        }, 3000);
+                    } else {
+                        showSuccess(resolvedUrl, jciParam);
+                    }
+                } catch (error) {
+                    showError(`Automatische doorverwijzing mislukt: ${error.message}`);
+                }
+            } else {
+                document.getElementById('jciInput').focus();
+            }
+        }
+
+        function showRedirectMessage(url, originalLink) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <div class="result success">
+                    <h3>🚀 Automatisch doorverwijzen...</h3>
+                    <p><strong>Origineel:</strong> ${originalLink}</p>
+                    <div class="result-url">${url}</div>
+                    <p>U wordt over 3 seconden doorverwezen...</p>
+                    <div class="result-actions">
+                        <a href="${url}" class="action-btn">🔗 Direct gaan</a>
+                        <button class="action-btn" onclick="cancelRedirect()">❌ Annuleren</button>
+                        <button class="action-btn" onclick="copyToClipboard('${url}')">📋 Kopieer URL</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function cancelRedirect() {
+            const resultDiv = document.getElementById('result');
+            const jciParam = new URLSearchParams(window.location.search).get('jci');
+
+            if (jciParam) {
+                try {
+                    const resolvedUrl = resolveJurineconnect(jciParam);
+                    showSuccess(resolvedUrl, jciParam);
+                } catch (error) {
+                    showError(error.message);
+                }
+            }
+        }
+
+        // Handle Enter key
+        document.getElementById('jciInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                resolveLink();
+            }
+        });
+
+        // Initialize page
+        window.addEventListener('load', function() {
+            checkForAutoRedirect();
+        });
+    </script>
+</body>
+</html>
